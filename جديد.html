@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة جرعات المونجارو | د. مصطفى محمود</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3a7bd5;
+            --secondary-color: #00d2ff;
+            --accent-color: #f85a40;
+            --error-color: #e63946;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --footer-name-bg-start: #ff7e5f; /* Start color for the name box */
+            --footer-name-bg-end: #feb47b; /* End color for the name box */
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--light-bg) 0%, #e6f0ff 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .doctor-title {
+            font-size: 18px;
+            margin-top: 10px;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .whatsapp-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #25D366;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            margin: 20px 0;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .whatsapp-btn:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+            background-color: var(--white);
+        }
+        select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(58, 123, 213, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            display: none;
+            border-left: 4px solid var(--primary-color);
+        }
+        .result strong {
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+        .error {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(230, 57, 70, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            display: none;
+            border-left: 4px solid var(--error-color);
+            animation: shake 0.5s;
+        }
+        .error strong {
+            color: var(--error-color);
+            font-size: 20px;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: rgba(0, 210, 255, 0.05);
+        }
+        tr:hover {
+            background-color: rgba(0, 210, 255, 0.1);
+        }
+        .note {
+            margin-top: 25px;
+            padding: 15px;
+            background: rgba(248, 90, 64, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            border-left: 4px solid var(--accent-color);
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #666;
+            font-size: 14px;
+        }
+        .footer-name {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--footer-name-bg-start) 0%, var(--footer-name-bg-end) 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-right: 5px; /* Adjust spacing if needed */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-size: 15px;
+            white-space: nowrap; /* Prevent line breaks within the name box */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>حاسبة جرعات قلم المونجارو</h1>
+            <div class="doctor-title">د. مصطفى محمود</div>
+        </div>
+        
+        <div class="content">
+            <a href="https://chat.whatsapp.com/GnO0Vud1fz8DTmoTVcm1ux" class="whatsapp-btn">
+                <i class="fab fa-whatsapp"></i> انضم إلى جروب الواتساب للاستشارات
+            </a>
+            
+            <div class="form-group">
+                <label for="pen-concentration">تركيز القلم المتاح:</label>
+                <select id="pen-concentration">
+                    <option value="15">15 ملغ</option>
+                    <option value="12.5">12.5 ملغ</option>
+                    <option value="10">10 ملغ</option>
+                    <option value="7.5">7.5 ملغ</option>
+                    <option value="5">5 ملغ</option>
+                    <option value="2.5">2.5 ملغ</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="required-dose">الجرعة المطلوبة (ملغ):</label>
+                <select id="required-dose">
+                    <option value="2.5">2.5 ملغ</option>
+                    <option value="5">5 ملغ</option>
+                    <option value="7.5">7.5 ملغ</option>
+                    <option value="10">10 ملغ</option>
+                    <option value="12.5">12.5 ملغ</option>
+                    <option value="15">15 ملغ</option>
+                </select>
+            </div>
+            
+            <button onclick="calculateTicks()">حساب عدد التكات المطلوبة</button>
+            
+            <div id="result" class="result"></div>
+            <div id="error" class="error"></div>
+            
+            <h2 style="color: var(--primary-color); text-align: center; margin-top: 30px;">جدول حساب الفئات لسحب الكمية الزائدة لقلم المونجارو</h2>
+            <table>
+                <tr>
+                    <th rowspan="2">الجرعة المطلوبة (ملغ)</th>
+                    <th colspan="6">الكمية في سرنجة الأسبوعين / عدد التكات المطلوبة</th>
+                </tr>
+                <tr>
+                    <th>2.5</th>
+                    <th>5</th>
+                    <th>7.5</th>
+                    <th>10</th>
+                    <th>12.5</th>
+                    <th>15</th>
+                </tr>
+                <tr>
+                    <td>تركيز القلم 15</td>
+                    <td>10</td>
+                    <td>20</td>
+                    <td>30</td>
+                    <td>40</td>
+                    <td>50</td>
+                    <td>60</td>
+                </tr>
+                <tr>
+                    <td>تركيز القلم 12.5</td>
+                    <td>12</td>
+                    <td>24</td>
+                    <td>36</td>
+                    <td>48</td>
+                    <td>60</td>
+                    <td></td> </tr>
+                <tr>
+                    <td>تركيز القلم 10</td>
+                    <td>15</td>
+                    <td>30</td>
+                    <td>45</td>
+                    <td>60</td>
+                    <td></td> <td></td>
+                </tr>
+                <tr>
+                    <td>تركيز القلم 7.5</td>
+                    <td>20</td>
+                    <td>40</td>
+                    <td>60</td>
+                    <td></td> <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>تركيز القلم 5</td>
+                    <td>30</td>
+                    <td>60</td>
+                    <td></td> <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>تركيز القلم 2.5</td>
+                    <td>60</td>
+                    <td></td> <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+            
+            <div class="note">
+                ملاحظة: القيم في الجدول تمثل عدد التكات المطلوبة للحصول على الجرعة المحددة.
+            </div>
+        </div>
+        
+        <div class="footer">
+            © 2023 جميع الحقوق محفوظة - <span class="footer-name">مصطفى</span>
+        </div>
+    </div>
+
+    <script>
+        function calculateTicks() {
+            const penConcentration = parseFloat(document.getElementById('pen-concentration').value);
+            const requiredDose = parseFloat(document.getElementById('required-dose').value);
+            
+            const resultElement = document.getElementById('result');
+            const errorElement = document.getElementById('error');
+            
+            // إخفاء جميع رسائل النتائج والأخطاء السابقة
+            resultElement.style.display = 'none';
+            errorElement.style.display = 'none';
+            
+            // بيانات الجدول المحدثة لتشمل جميع التركيزات والجرعات
+            const data = {
+                '15': {'2.5': 10, '5': 20, '7.5': 30, '10': 40, '12.5': 50, '15': 60},
+                '12.5': {'2.5': 12, '5': 24, '7.5': 36, '10': 48, '12.5': 60},
+                '10': {'2.5': 15, '5': 30, '7.5': 45, '10': 60},
+                '7.5': {'2.5': 20, '5': 40, '7.5': 60},
+                '5': {'2.5': 30, '5': 60},
+                '2.5': {'2.5': 60}
+            };
+            
+            // التحقق إذا كانت الجرعة المطلوبة أكبر من تركيز القلم المتاح
+            if (requiredDose > penConcentration) {
+                errorElement.style.display = 'block';
+                errorElement.innerHTML = `
+                    <p><strong>خطأ:</strong> الجرعة المطلوبة (${requiredDose} ملغ) أكبر من تركيز القلم (${penConcentration} ملغ).</p>
+                    <p>يرجى اختيار جرعة أقل من أو تساوي تركيز القلم.</p>
+                `;
+                return;
+            }
+
+            // التحقق مما إذا كانت تركيبة تركيز القلم والجرعة المطلوبة موجودة في البيانات
+            const ticks = data[penConcentration] && data[penConcentration][requiredDose];
+
+            if (ticks === undefined) {
+                errorElement.style.display = 'block';
+                errorElement.innerHTML = `
+                    <p><strong>خطأ:</strong> لا توجد بيانات متاحة لحساب الجرعة المطلوبة (${requiredDose} ملغ) باستخدام قلم بتركيز (${penConcentration} ملغ).</p>
+                    <p>يرجى مراجعة الجدول أعلاه أو اختيار تركيزات وجرعات أخرى متوافقة.</p>
+                `;
+                return;
+            }
+            
+            resultElement.style.display = 'block';
+            resultElement.innerHTML = `
+                <p><strong>عدد التكات المطلوبة:</strong> ${ticks} تكة</p>
+                <p>لجرعة ${requiredDose} ملغ باستخدام قلم تركيز ${penConcentration} ملغ</p>
+            `;
+        }
+    </script>
+</body>
+</html>
